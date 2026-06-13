@@ -5,9 +5,7 @@ function App() {
   return (
     <div className="app">
       <div className="lamps-grid">
-        <LampContainer label="Red" />
-        <LampContainer label="Green" />
-        <LampContainer label="Blue" />
+        <LampContainer />
       </div>
     </div>
   )
