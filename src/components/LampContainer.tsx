@@ -67,11 +67,11 @@ const LampCard = ({lamp}: {lamp: LampContainerPropsTest}) => {
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const togglePower = (item: LampContainerPropsTest) => {
-  console.log('togglePower Updating item:', item)
-  console.log('togglePower API URL:', `${API.BASE_URL}${API.LAMPS}`)
     const next = !isOn
+    item.status = next
     setIsOn(next)
-    //item.status = next
+    console.log('togglePower Updating item:', item)
+    console.log('togglePower API URL:', `${API.BASE_URL}${API.LAMPS}`)
     updateRequest(item)
   }
 
