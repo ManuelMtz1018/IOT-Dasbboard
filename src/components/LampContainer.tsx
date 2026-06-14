@@ -1,35 +1,37 @@
 import { useRef, useState } from 'react'
 import { API } from '../config/api';
-import type { LampContainerPropsTest } from '../models/LampContainerPropsTest';
+import type { LampContainerProps } from '../models/LampContainerProps';
 
-const listLamps: LampContainerPropsTest[] = [{
+const listLamps: LampContainerProps[] = [{
   id: 1,
   label: 'Red wine',
   status: false,
   description: 'A simple lamp',
-  brightness: 100
+  //brightness: 100
 },
 {
   id: 2,
   label: 'Blue sky',
   status: false,
   description: 'Another simple lamp',
-  brightness: 128
+  //brightness: 128
 },
 {
   id: 3,
   label: 'Green field',
   status: false,
   description: 'Yet another simple lamp',
-  brightness: 200
+  //brightness: 200
 }]
 
-const saveRequest = async (path: string, item: LampContainerPropsTest) => {
+const saveRequest = async (path: string, item: LampContainerProps) => {
   try {
     await fetch(`${API.BASE_URL}${path}`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Access-Control-Allow-Origin': '*'
       },
       body: JSON.stringify(item)
     })
@@ -37,14 +39,16 @@ const saveRequest = async (path: string, item: LampContainerPropsTest) => {
     console.error('Request failed:', e)
   }
 }
-const updateRequest = async (item: LampContainerPropsTest) => {
+const updateRequest = async (item: LampContainerProps) => {
   console.log('Updating item:', item)
-  console.log('API URL:', `${API.BASE_URL}${API.LAMPS}`)
+  console.log('API URL:', `${API.BASE_URL}${API.LAMPS_UPDATE}`)
   try {
-    await fetch(`${API.BASE_URL}${API.LAMPS}`, {
+    await fetch(`${API.BASE_URL}${API.LAMPS_UPDATE}${item.id}`, {
       method: 'PUT',
       headers: {
-        'Content-Type': 'application/json'
+         'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Access-Control-Allow-Origin': '*'
       },
       body: JSON.stringify(item)
     })
@@ -61,17 +65,15 @@ const PowerIcon = () => {
   )
 }
 
-const LampCard = ({lamp}: {lamp: LampContainerPropsTest}) => {
+const LampCard = ({lamp}: {lamp: LampContainerProps}) => {
   const [isOn, setIsOn] = useState(lamp.status)
-  const [brightness, setBrightness] = useState(lamp.brightness)
+  const [brightness, setBrightness] = useState(100)
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
-  const togglePower = (item: LampContainerPropsTest) => {
-    const next = !isOn
-    item.status = next
-    setIsOn(next)
-    console.log('togglePower Updating item:', item)
-    console.log('togglePower API URL:', `${API.BASE_URL}${API.LAMPS}`)
+  const togglePower = (item: LampContainerProps) => {
+    item.status = !isOn
+    //item.status = next
+    setIsOn(item.status)
     updateRequest(item)
   }
 
@@ -131,7 +133,7 @@ const LampCard = ({lamp}: {lamp: LampContainerPropsTest}) => {
   );
 }
 
-const LampContainer = ({ }: LampContainerPropsTest) => {
+const LampContainer = ({ }: LampContainerProps) => {
   return (
     <>
       {listLamps.map((lamp) => (
